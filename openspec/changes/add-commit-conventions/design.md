@@ -7,9 +7,11 @@ The format is not Conventional Commits, so the stock commitlint presets do not a
 ## Goals / Non-Goals
 
 **Goals:**
+
 - Machine-check every rule the maintainer defined.
 
 **Non-Goals:**
+
 - Deriving versions or release notes from commit types.
 
 ## Decisions

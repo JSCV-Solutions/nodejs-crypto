@@ -16,6 +16,7 @@ Every namespace needs the same error model, encodings, input handling, sync/asyn
 ## Capabilities
 
 ### New Capabilities
+
 - `shared-core`: cross-cutting behavior shared by all namespaces.
 
 ### Modified Capabilities

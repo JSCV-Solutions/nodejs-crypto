@@ -1,0 +1,6 @@
+.agents/
+.claude/
+.cursor/
+.opencode/
+dist
+pnpm-lock.yaml

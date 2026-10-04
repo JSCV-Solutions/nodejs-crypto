@@ -7,9 +7,11 @@ Node.js ships the primitives, but the library adds a uniform surface. The option
 ## Goals / Non-Goals
 
 **Goals:**
+
 - One error model, one input and encoding model, predictable names.
 
 **Non-Goals:**
+
 - Streaming interfaces, browser support.
 
 ## Decisions

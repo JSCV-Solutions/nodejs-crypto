@@ -7,9 +7,11 @@ TypeScript 7.0.2 is the native compiler and does not expose the JavaScript compi
 ## Goals / Non-Goals
 
 **Goals:**
+
 - Exact, reproducible versions; fast local feedback; both module formats verified to load.
 
 **Non-Goals:**
+
 - Bundling, minification, browser support, coverage thresholds.
 
 ## Decisions

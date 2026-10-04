@@ -17,6 +17,7 @@ Releases are manual and tag-driven, and both the npm package and the documentati
 ## Capabilities
 
 ### New Capabilities
+
 - `release-pipeline`: continuous integration, tag-driven npm publishing and documentation deployment.
 
 ### Modified Capabilities

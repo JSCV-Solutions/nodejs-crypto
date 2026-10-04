@@ -14,6 +14,7 @@ The project uses its own commit format (`<TYPE> - <Description>`) and wants it e
 ## Capabilities
 
 ### New Capabilities
+
 - `commit-conventions`: format, validation and enforcement of commit messages.
 
 ### Modified Capabilities

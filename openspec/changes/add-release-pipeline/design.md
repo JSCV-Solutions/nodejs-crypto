@@ -7,9 +7,11 @@ Version bumps are manual. The maintainer edits `package.json`, commits and pushe
 ## Goals / Non-Goals
 
 **Goals:**
+
 - A tag is the single release trigger; the workflow verifies instead of trusting it.
 
 **Non-Goals:**
+
 - Computing versions, writing changelog files, publishing to registries other than npm.
 
 ## Decisions

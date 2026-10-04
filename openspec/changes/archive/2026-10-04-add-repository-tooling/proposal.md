@@ -17,6 +17,7 @@ The repository has no build, quality or test tooling yet. Every later change (al
 ## Capabilities
 
 ### New Capabilities
+
 - `repository-tooling`: toolchain versions, compilation, package layout and exports, static quality gates and test execution for the library.
 
 ### Modified Capabilities
