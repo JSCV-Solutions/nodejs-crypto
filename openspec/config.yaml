@@ -1,0 +1,48 @@
+schema: spec-driven
+
+context: |
+  Project: @jscv-solutions/node-crypto, a public npm library of ready-to-use
+  cryptography utilities for Node.js (minimum Node 24.7.0, ESM and CJS output).
+  Constraints an agent cannot infer from the code:
+  - node:crypto is the only crypto provider. The single exception is bcrypt,
+    which is an optional, lazily loaded peer dependency.
+  - Public API is functional exports grouped in namespaces, published as subpath
+    exports (encryption, digest, message-authentication, password-hashing,
+    key-derivation, random, comparison). Names are meaningful and never abbreviated
+    unless the abbreviation is the algorithm's own name (HMAC, AES, SHA, PBKDF2).
+  - Algorithm identifiers are lowercase kebab-case strings (for example
+    aes-256-gcm, sha-256, argon2id).
+  - Every operation has an async and a sync variant (Sync suffix, Node style).
+  - Errors are instances of NodeCryptoError subclasses with a stable string code.
+  - Defaults follow the current OWASP Password Storage Cheat Sheet and may only be
+    raised or kept equivalent in strength. Weakening a default is a major change.
+  - Semver is strict. Releases are manual: the maintainer bumps the version and
+    pushes a v*.*.* tag. No commit type triggers a release.
+  - Commit first lines use "<TYPE> - <Description>" (see AGENTS.md).
+  - Tests use the Node built-in test runner and known-answer vectors from the
+    relevant RFC or NIST publication. No secrets in tests or fixtures.
+
+rules:
+  proposal:
+    - Name exactly one capability per change.
+    - State explicitly what is out of scope.
+    - Mark breaking changes with BREAKING and explain them.
+  specs:
+    - Use SHALL or MUST in every requirement and WHEN/THEN scenarios.
+    - Cover error conditions and security-relevant behavior, not only the happy path.
+    - Cite the RFC, NIST publication or OWASP section a requirement relies on.
+  design:
+    - Record rejected alternatives for every cryptographic decision.
+    - State the default parameters chosen and the source that justifies them.
+  tasks:
+    - Include known-answer test vectors as tasks for every algorithm.
+    - Include a documentation task (JSDoc and docs site) for every public function.
+
+operations:
+  apply:
+    guidance:
+      - Run the tests and the type check after every change to source code.
+      - Never add a dependency without explicit maintainer approval.
+  archive:
+    guidance:
+      - Run openspec validate --all --strict before archiving.

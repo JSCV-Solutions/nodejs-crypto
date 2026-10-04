@@ -1,0 +1,153 @@
+{
+  "name": "@jscv-solutions/node-crypto",
+  "version": "1.0.0",
+  "description": "Ready-to-use cryptography utilities for Node.js: authenticated encryption, digests, HMAC, password hashing, key derivation, secure random generation and constant-time comparison.",
+  "scripts": {
+    "audit:prod": "pnpm audit --prod --audit-level high",
+    "build:cjs": "tsc -p tsconfig.build.cjs.json",
+    "build:esm": "tsc -p tsconfig.build.esm.json",
+    "build": "pnpm run clean && pnpm run build:esm && pnpm run build:cjs && node scripts/write-dist-package-json.mjs",
+    "clean": "node --eval \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+    "commitlint": "commitlint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "prepare": "husky",
+    "test": "node --test \"tests/**/*.test.ts\"",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "keywords": [
+    "crypto",
+    "encryption",
+    "aes-256-gcm",
+    "argon2",
+    "bcrypt",
+    "scrypt",
+    "pbkdf2",
+    "hmac",
+    "sha-256",
+    "sha-512",
+    "nodejs"
+  ],
+  "homepage": "https://jscv-solutions.github.io/nodejs-crypto/",
+  "bugs": {
+    "url": "https://github.com/JSCV-Solutions/nodejs-crypto/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JSCV-Solutions/nodejs-crypto.git"
+  },
+  "license": "MPL-2.0",
+  "author": "JSCV Solutions",
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=24.7.0",
+    "pnpm": "12.8.1"
+  },
+  "packageManager": "pnpm@12.8.1",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "exports": {
+    "./encryption": {
+      "import": {
+        "types": "./dist/esm/packages/encryption/index.d.ts",
+        "default": "./dist/esm/packages/encryption/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/packages/encryption/index.d.ts",
+        "default": "./dist/cjs/packages/encryption/index.js"
+      }
+    },
+    "./digest": {
+      "import": {
+        "types": "./dist/esm/packages/digest/index.d.ts",
+        "default": "./dist/esm/packages/digest/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/packages/digest/index.d.ts",
+        "default": "./dist/cjs/packages/digest/index.js"
+      }
+    },
+    "./message-authentication": {
+      "import": {
+        "types": "./dist/esm/packages/message-authentication/index.d.ts",
+        "default": "./dist/esm/packages/message-authentication/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/packages/message-authentication/index.d.ts",
+        "default": "./dist/cjs/packages/message-authentication/index.js"
+      }
+    },
+    "./password-hashing": {
+      "import": {
+        "types": "./dist/esm/packages/password-hashing/index.d.ts",
+        "default": "./dist/esm/packages/password-hashing/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/packages/password-hashing/index.d.ts",
+        "default": "./dist/cjs/packages/password-hashing/index.js"
+      }
+    },
+    "./key-derivation": {
+      "import": {
+        "types": "./dist/esm/packages/key-derivation/index.d.ts",
+        "default": "./dist/esm/packages/key-derivation/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/packages/key-derivation/index.d.ts",
+        "default": "./dist/cjs/packages/key-derivation/index.js"
+      }
+    },
+    "./random": {
+      "import": {
+        "types": "./dist/esm/packages/random/index.d.ts",
+        "default": "./dist/esm/packages/random/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/packages/random/index.d.ts",
+        "default": "./dist/cjs/packages/random/index.js"
+      }
+    },
+    "./comparison": {
+      "import": {
+        "types": "./dist/esm/packages/comparison/index.d.ts",
+        "default": "./dist/esm/packages/comparison/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/packages/comparison/index.d.ts",
+        "default": "./dist/cjs/packages/comparison/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "peerDependencies": {
+    "bcrypt": "^6.0.0"
+  },
+  "peerDependenciesMeta": {
+    "bcrypt": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@commitlint/cli": "21.2.3",
+    "@eslint/js": "10.0.1",
+    "@types/bcrypt": "6.0.0",
+    "@types/node": "24.19.1",
+    "bcrypt": "6.0.0",
+    "eslint": "10.12.0",
+    "eslint-config-prettier": "10.1.8",
+    "husky": "9.1.7",
+    "prettier": "3.9.9",
+    "typescript": "npm:@typescript/typescript6@6.0.2",
+    "typescript-7": "npm:typescript@7.0.2",
+    "typescript-eslint": "8.71.0"
+  }
+}
