@@ -36,3 +36,7 @@ and checks each one resolves to its own namespace.
 It needs built output, so the order is `pnpm build` then `pnpm smoke`;
 it is intentionally separate from `pnpm test`,
 which runs against TypeScript sources without a prior build.
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the contributor guide.

@@ -84,14 +84,7 @@ Namespaces: `encryption`, `digest`, `message-authentication`, `password-hashing`
 
 ## Commit messages
 
-First line: `<TYPE> - <Description>`
-
-- Types (uppercase): `CHORE`, `DOCS`, `ENHANCEMENT`, `FEATURE`, `FIX`, `GITIGNORE`, `HOTFIX`, `MERGE`, `REFACTOR`, `SECURITY`, `STYLE`, `TEST`.
-- Description: capitalized, 50 characters or fewer, no verb in the past tense (write `Add`, not `Added`).
-- Examples: `FEATURE - Add SHA-256 digest`, `FIX - Reject empty salt`, `MERGE - Pull request #6`.
-- A breaking change needs `BREAKING CHANGE:` in the body followed by an explanation.
-- Footers such as `Close #12` are allowed. Commits are validated by commitlint through a Husky hook and in CI for pull request commits.
-- Pull requests are merged with merge commits. No commit type triggers a release: only a pushed `v*.*.*` tag does.
+Follow `CONTRIBUTING.md` for the commit message format.
 
 ## Testing
 

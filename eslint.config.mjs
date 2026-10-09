@@ -51,13 +51,16 @@ export default defineConfig([
     }
   },
   {
-    files: ['**/*.mjs', '**/*.cjs'],
+    files: ['**/*.mjs', '**/*.cjs', '**/*.d.mts'],
     languageOptions: {
       globals: {
         console: 'readonly',
         process: 'readonly'
       }
     },
+    // Declaration files contain no runtime code, so type-aware rules that
+    // need parser services (e.g. commitlint.rules.d.mts, which is outside
+    // the type-checked src/tests roots) are disabled for them.
     extends: [tseslint.configs.disableTypeChecked]
   },
   eslintPluginPrettierRecommended
