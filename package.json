@@ -1,6 +1,6 @@
 {
   "name": "@jscv-solutions/node-crypto",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0-rc.2",
   "description": "Ready-to-use cryptography utilities for Node.js: authenticated encryption, digests, HMAC, password hashing, key derivation, secure random generation and constant-time comparison.",
   "scripts": {
     "audit:prod": "pnpm audit --prod --audit-level high",
