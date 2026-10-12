@@ -20,7 +20,7 @@ Workflow: propose, review, apply, archive. Use `/opsx:propose` (Claude Code), `/
 
 ## Commands
 
-See the Scripts table in `README.md` for the available commands.
+See the Scripts table in `CONTRIBUTING.md` for the available commands.
 
 ## Toolchain notes
 
