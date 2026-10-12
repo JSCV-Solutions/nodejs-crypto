@@ -2,13 +2,13 @@
 
 ## 1. Verification of assumptions
 
-- [ ] 1.1 Verify `pnpm publish --provenance` works in GitHub Actions with `NPM_TOKEN` (dry run on a pre-release tag)
+- [x] 1.1 Verify `pnpm publish --provenance` works in GitHub Actions with `NPM_TOKEN` (dry run on a pre-release tag)
 - [ ] 1.2 Verify `pnpm dist-tag add` works with the same token
 
-Deferred: no `NPM_TOKEN` secret is configured and the package was never
-published (`pnpm view` returns 404), so both stay open as a follow-up on
-the first pre-release tag. The workflows fail before publishing on any
-registry or lookup error, which is the safe default.
+Done for 1.1: the release workflow published the pre-release with
+provenance using `NPM_TOKEN`. Still open for 1.2: a pre-release never
+executes `dist-tag add` (its `extra-tags` are empty), so this closes on
+the first stable release, which adds the `latest-*` tags.
 
 ## 2. Continuous integration
 
@@ -35,11 +35,13 @@ identifier is rejected.
 ## 4. Documentation deployment
 
 - [x] 4.1 Add `docs.yml` triggered by successful completion of the release workflow, skipped for pre-releases and for stable releases that do not take `latest`
-- [ ] 4.2 Enable GitHub Pages for the repository
+- [x] 4.2 Enable GitHub Pages for the repository
 
-Deferred: Pages is not enabled (API returns 404) and `docs/` is still a
-placeholder until the documentation-site change, so enabling Pages is a
-follow-up with that change.
+Done: Pages is enabled with `workflow` builds and the custom domain is
+set. The first real deployment still waits for the first stable release
+taking `latest` (`docs/` is a placeholder until the documentation-site
+change). Still to do outside this change: verify DNS for the custom
+domain and enforce HTTPS.
 
 ## 5. Documentation
 
