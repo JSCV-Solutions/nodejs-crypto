@@ -1,0 +1,78 @@
+# Tag-driven releases. Triggered only by pushing a tag matching `v*.*.*`;
+# branch pushes never publish. Verifies the tag against `package.json`,
+# repeats the full verification, publishes with PNPM and provenance, adds
+# the version-line dist-tags and creates a GitHub release with generated
+# notes. Only this workflow writes contents and mints identity tokens.
+# See openspec/changes/add-release-pipeline.
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: Verify and publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 12.8.1
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24.7.0
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
+      - run: pnpm install --frozen-lockfile
+      - name: Check tag and package.json version match
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          version="$(pnpm pkg get version)"
+          if [ "$tag" != "$version" ]; then
+            echo "Tag v$tag does not match package.json version $version" >&2
+            exit 1
+          fi
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm smoke
+      - name: Select publish tag
+        id: tags
+        # Fails before publishing when the version does not qualify for any
+        # dist-tag. A 404 from `npm view` (package never published) counts as
+        # an empty version list, so the first stable release takes `latest`.
+        run: node scripts/select-publish-tag.mjs --version "${GITHUB_REF_NAME#v}" --package "@jscv-solutions/node-crypto" >> "$GITHUB_OUTPUT"
+      - name: Publish with provenance
+        # The tag checkout is detached, so Git checks are disabled here.
+        run: pnpm publish --no-git-checks --provenance --access public --tag "${{ steps.tags.outputs.publish-tag }}"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Add version-line dist-tags
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          for tag in ${{ steps.tags.outputs.extra-tags }}; do
+            pnpm dist-tag add "@jscv-solutions/node-crypto@${version}" "$tag"
+          done
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Create GitHub release
+        run: |
+          if [ "${{ steps.tags.outputs.prerelease }}" = "true" ]; then
+            gh release create "$GITHUB_REF_NAME" --generate-notes --prerelease
+          else
+            gh release create "$GITHUB_REF_NAME" --generate-notes
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

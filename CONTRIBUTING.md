@@ -186,3 +186,38 @@ pnpm exec commitlint --edit <message-file>
 - Never include secrets, passwords, keys or plaintext in code, errors,
   comments, tests or fixtures. Public known-answer vectors from RFCs or
   NIST are allowed because they are published test data.
+
+## Releases
+
+Releases are manual and tag-driven. The maintainer:
+
+1. Sets `version` in the root `package.json` (the `docs/` placeholder
+   stays `0.0.0` until the documentation-site change) and commits it.
+2. Pushes tag `vX.Y.Z` for a stable release or `vX.Y.Z-<identifier>.N`
+   for a pre-release (for example `v1.0.0-beta.1`).
+
+[`release.yml`](./.github/workflows/release.yml) runs only for `v*.*.*` tags, so branch pushes never
+publish. It fails when the tag without its leading `v` differs from
+`package.json`, repeats the full verification (`format:check`, `lint`,
+`typecheck`, `test`, `build`, `smoke`), publishes with
+`pnpm publish --no-git-checks --provenance --access public` using the
+`NPM_TOKEN` secret (a granular token limited to this package), then
+creates a GitHub release with generated notes.
+
+Dist-tags:
+
+| Release                                                   | Published under         | Also points here                           |
+| --------------------------------------------------------- | ----------------------- | ------------------------------------------ |
+| Highest stable ever (`1.1.1` after `1.1.0`)               | `latest`                | `latest-1`, `latest-1.1`                   |
+| Highest in its major (`1.9.9` after `2.0.0`)              | `latest-1`              | `latest-1.9` (`latest` stays on `2.0.0`)   |
+| Highest in its minor (`1.0.5` after `1.1.1`)              | `latest-1.0`            | nothing else                               |
+| Lower than published in its minor (`1.0.3` after `1.0.5`) | fails before publishing | nothing                                    |
+| Pre-release (`1.0.0-beta.1`)                              | `beta`                  | nothing; GitHub release marked pre-release |
+
+[`docs.yml`](./.github/workflows/docs.yml) runs after the release workflow succeeds and deploys the docs site to GitHub Pages only for
+the stable release that takes `latest`, so pre-releases, failed releases and patches
+for older lines never replace the published docs.
+
+The live registry checks (`pnpm publish --provenance` and
+`npm dist-tag add` with `NPM_TOKEN`) are verified on the first
+pre-release tag as a follow-up to tasks 1.1-1.2.

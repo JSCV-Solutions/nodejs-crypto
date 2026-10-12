@@ -1,6 +1,7 @@
 # commit-conventions Specification
 
 ## Purpose
+
 Defines the commit message format used by the project and how it is enforced locally and in continuous integration.
 
 ## Requirements

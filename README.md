@@ -42,6 +42,8 @@ which runs against TypeScript sources without a prior build.
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for the contributor guide,
 including the repository layout and code conventions.
+Releases are tag-driven; see the [Releases](./CONTRIBUTING.md#releases)
+procedure and dist-tags.
 
 ## Shared core
 

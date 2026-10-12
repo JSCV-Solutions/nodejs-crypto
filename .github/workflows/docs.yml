@@ -1,0 +1,103 @@
+# Latest-only documentation deployment. Runs after the release workflow
+# completes successfully, and deploys only for the stable release that
+# takes `latest`: pre-releases, failed releases and patches for older
+# lines never replace the published docs. A `workflow_run` run uses this
+# file from the default branch, so the released tag is checked out
+# explicitly below. The docs build expects the Docusaurus site, which
+# lands with the documentation-site change; until then `docs/` is a
+# placeholder with no build script.
+# See openspec/changes/add-release-pipeline.
+name: Docs
+
+on:
+  workflow_run:
+    workflows:
+      - Release
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy docs to GitHub Pages
+    if: github.event.workflow_run.conclusion == 'success' && !contains(github.event.workflow_run.head_branch, '-')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+          fetch-depth: 0
+      - name: Check this tag takes latest
+        id: gate
+        # Deploys only when the released tag is the highest stable `v*.*.*`
+        # tag, so a patch for an older line never replaces the docs.
+        env:
+          RELEASE_TAG: ${{ github.event.workflow_run.head_branch }}
+        run: |
+          result="$(node --input-type=module -e '
+          import { execSync } from "node:child_process";
+          const ref = process.env.RELEASE_TAG;
+          const parse = (text) => {
+            if (text.includes("-")) {
+              return null;
+            }
+            const parts = text.replace(/^v/, "").split(".");
+            const valid =
+              parts.length === 3 &&
+              parts.every((part) => /^(0|[1-9][0-9]*)$/.test(part));
+            return valid ? parts.map(Number) : null;
+          };
+          const compare = (a, b) => a[0] - b[0] || a[1] - b[1] || a[2] - b[2];
+          const out = execSync("git tag --list \"v*.*.*\"", { encoding: "utf8" });
+          const stable = out
+            .split("\n")
+            .map((line) => line.trim())
+            .filter(Boolean)
+            .map((tag) => ({ tag: tag, version: parse(tag) }))
+            .filter((entry) => entry.version !== null);
+          const current = stable.find((entry) => entry.tag === ref);
+          if (current === undefined) {
+            console.error("Current tag is not a stable version tag");
+            process.exit(1);
+          }
+          const highest = stable.reduce(
+            (a, b) => (compare(a.version, b.version) < 0 ? b : a),
+            current
+          );
+          process.stdout.write(highest.tag === ref ? "true" : "false");
+          ')"
+          echo "deploy=$result" >> "$GITHUB_OUTPUT"
+      - uses: pnpm/action-setup@v6
+        if: steps.gate.outputs.deploy == 'true'
+        with:
+          version: 12.8.1
+      - uses: actions/setup-node@v7
+        if: steps.gate.outputs.deploy == 'true'
+        with:
+          node-version: 24.7.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+        if: steps.gate.outputs.deploy == 'true'
+      - name: Build docs
+        if: steps.gate.outputs.deploy == 'true'
+        run: pnpm --filter @jscv-solutions/node-crypto-docs build
+      - uses: actions/upload-pages-artifact@v5
+        if: steps.gate.outputs.deploy == 'true'
+        with:
+          path: docs/build
+      - name: Deploy to GitHub Pages
+        id: deployment
+        if: steps.gate.outputs.deploy == 'true'
+        uses: actions/deploy-pages@v5
