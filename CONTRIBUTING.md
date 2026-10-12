@@ -1,8 +1,9 @@
 # Contributing
 
 This guide covers the day-to-day contributor workflow: setup, scripts,
-the commit message format and the pull request process. AI coding agents
-follow `AGENTS.md`; the commit format below is binding for everyone.
+the repository layout, the code conventions, the commit message format
+and the pull request process. AI coding agents follow `AGENTS.md`; the
+commit format below is binding for everyone.
 
 ## Prerequisites
 
@@ -31,6 +32,29 @@ script, so commits are linted locally with no extra setup.
 
 Run `pnpm typecheck` and `pnpm test` after every source change.
 Keep `pnpm lint` and `pnpm format:check` green before pushing.
+
+## Repository layout
+
+```
+docs/                    Docusaurus site (workspace package, deployed on stable tags)
+openspec/                specs, changes, config.yaml
+src/packages/<name>/     one folder per namespace = one subpath export; one file per algorithm
+src/shared/              errors, encodings, input handling, deprecation, peer loading
+tests/                   mirrors src/packages/ and src/shared/
+```
+
+Namespaces: `encryption`, `digest`, `message-authentication`, `password-hashing`, `key-derivation`, `random`, `comparison`. Files and folders use kebab-case.
+
+## Code conventions
+
+- Functional exports only. No classes except error classes.
+- Public API is minimal: the algorithm identifier chosen by the caller drives behavior.
+- Identifiers are meaningful and not abbreviated, unless the abbreviation is the algorithm's own name (HMAC, AES, SHA, PBKDF2).
+- Algorithm identifiers are lowercase kebab-case strings (`aes-256-gcm`, `sha-256`, `argon2id`).
+- Every operation has an async function and a `Sync` variant with equal results and errors.
+- Explicit type annotations on variables, parameters and return types; explicit member accessibility. Prettier: single quotes, no trailing commas.
+- Every public function has JSDoc and an entry in the docs site.
+- Errors extend `NodeCryptoError` and carry a stable string `code`. Messages never contain secrets or plaintext.
 
 ## Commit message format
 

@@ -4,15 +4,16 @@ Ready-to-use cryptographic utility package for Node.js applications.
 
 ## Scripts
 
-| Command             | Purpose                                                                                                        |
-| ------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `pnpm audit:prod`   | Fail on high or critical findings in production dependencies                                                   |
-| `pnpm build`        | Emit ESM to `dist/esm` and CJS to `dist/cjs`, then write per-format `package.json` files                       |
-| `pnpm format:check` | Verify Prettier formatting (`pnpm format` fixes)                                                               |
-| `pnpm lint`         | Run ESLint with strict type-checked rules, plus Prettier formatting as a lint rule                             |
-| `pnpm smoke`        | Verify every exported subpath loads from built output via both `import` and `require` (run after `pnpm build`) |
-| `pnpm test`         | Run the Node.js built-in test runner on `tests/**/*.test.ts` directly against TypeScript sources               |
-| `pnpm typecheck`    | Type-check sources with TypeScript 7.0.2 (`tsc`)                                                               |
+| Command                                                   | Purpose                                                                                                        |
+| --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `pnpm audit:prod`                                         | Fail on high or critical findings in production dependencies                                                   |
+| `pnpm build`                                              | Emit ESM to `dist/esm` and CJS to `dist/cjs`, then write per-format `package.json` files                       |
+| `pnpm format:check`                                       | Verify Prettier formatting (`pnpm format` fixes)                                                               |
+| `pnpm lint`                                               | Run ESLint with strict type-checked rules, plus Prettier formatting as a lint rule                             |
+| `pnpm smoke`                                              | Verify every exported subpath loads from built output via both `import` and `require` (run after `pnpm build`) |
+| `pnpm test`                                               | Run the Node.js built-in test runner on `tests/**/*.test.ts` directly against TypeScript sources               |
+| `pnpm typecheck`                                          | Type-check sources with TypeScript 7.0.2 (`tsc`)                                                               |
+| `npx @fission-ai/openspec@1.14.0 validate --all --strict` | Validate OpenSpec specs and changes (must pass before archiving)                                               |
 
 ## Toolchain
 
