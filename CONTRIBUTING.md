@@ -48,10 +48,13 @@ docs/                    Docusaurus site (workspace package, deployed on stable 
 openspec/                specs, changes, config.yaml
 src/packages/<name>/     one folder per namespace = one subpath export; one file per algorithm
 src/shared/              errors, encodings, input handling, deprecation, peer loading
-tests/                   mirrors src/packages/ and src/shared/
+src/<area>/typings/<name>.d.ts   interfaces and type aliases for the runtime module
+tests/                   mirrors the runtime modules under src/ (no tests for pure declarations)
 ```
 
 Namespaces: `encryption`, `digest`, `message-authentication`, `password-hashing`, `key-derivation`, `random`, `comparison`. Files and folders use kebab-case.
+
+Type declarations (interfaces and type aliases) live in `typings/` folders mirroring their runtime module (`src/shared/inputs.ts` owns `src/shared/typings/inputs.d.ts`) and are consumed with `import type`. Classes stay in the runtime module.
 
 ## Code conventions
 
@@ -61,6 +64,7 @@ Namespaces: `encryption`, `digest`, `message-authentication`, `password-hashing`
 - Algorithm identifiers are lowercase kebab-case strings (`aes-256-gcm`, `sha-256`, `argon2id`).
 - Every operation has an async function and a `Sync` variant with equal results and errors.
 - Explicit type annotations on variables, parameters and return types; explicit member accessibility. Prettier: single quotes, no trailing commas.
+- Closed sets are string-literal unions, not `enum` declarations (`erasableSyntaxOnly` forbids them).
 - Every public function has JSDoc and an entry in the docs site.
 - Errors extend `NodeCryptoError` and carry a stable string `code`. Messages never contain secrets or plaintext.
 

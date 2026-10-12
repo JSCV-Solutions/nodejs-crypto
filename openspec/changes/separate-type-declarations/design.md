@@ -54,6 +54,18 @@ output, and tests running on sources through Node type stripping.
   runtime modules (defeats the separation) and leaving `dist/` without
   them (breaks consumers).
 
+## Spike result (task 1.1, validated 2026-10-12)
+
+Built both formats and inspected `dist/`: `tsc` emits per-module `.js`
+and `.d.ts` but does not re-emit the `src/shared/typings/*.d.ts`
+inputs, and the emitted `.d.ts` files keep the dangling
+`./typings/*.js` imports — confirming the scratch check.
+`scripts/write-dist-package-json.mjs` now copies `src/shared/typings/`
+into each tree's `shared/typings/`; the rebuilt trees carry all three
+declarations, `pnpm smoke` passes, and a consumer `tsc --noEmit` probe
+against both trees (with `skipLibCheck` off) resolves the relocated
+types with exit 0.
+
 ## Risks / Trade-offs
 
 - [Risk] Input `.d.ts` files missing from `dist/` break consumer

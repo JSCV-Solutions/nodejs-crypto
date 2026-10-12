@@ -6,7 +6,11 @@
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": false,
     "rootDir": "src",
-    "outDir": "dist/cjs"
+    "outDir": "dist/cjs",
+    "paths": {
+      "#sync-require": ["./src/shared/require-sync-cjs.ts"]
+    }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["src/shared/require-sync-esm.ts"]
 }

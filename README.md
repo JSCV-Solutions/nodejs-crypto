@@ -40,4 +40,52 @@ which runs against TypeScript sources without a prior build.
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for the contributor guide.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the contributor guide,
+including the repository layout and code conventions.
+
+## Shared core
+
+Internal behavior every namespace builds on (`src/shared/`,
+mirrored by `tests/shared/`). These pages move into the Docusaurus
+site with the documentation-site change; until then this section is
+the user-facing reference.
+
+### Error codes
+
+Every error is a `NodeCryptoError` subclass carrying a stable `code`:
+
+| Code                      | Class                        | When                                                  |
+| ------------------------- | ---------------------------- | ----------------------------------------------------- |
+| `INVALID_ARGUMENT`        | `InvalidArgumentError`       | Wrong argument type or range                          |
+| `INVALID_ENCODING`        | `InvalidEncodingError`       | Text breaks the `hex`, `base64` or `base64url` rules  |
+| `MISSING_PEER_DEPENDENCY` | `MissingPeerDependencyError` | Optional peer (for example `bcrypt`) is not installed |
+| `UNSUPPORTED_ALGORITHM`   | `UnsupportedAlgorithmError`  | Algorithm identifier the function does not support    |
+
+Messages never contain secrets, passwords, keys or plaintext.
+
+### Encodings and inputs
+
+Functions accept `string` (UTF-8), `Buffer` or `Uint8Array` with
+identical results, and render binary data as `hex`, `base64` or
+`base64url` text. Decoding is strict: malformed input throws
+`INVALID_ENCODING` instead of being silently truncated.
+
+### Deprecation warnings
+
+Deprecated algorithms (for example `md5`, landing in a later change)
+carry the JSDoc `@deprecated` tag and emit one `DeprecationWarning`
+per process through `process.emitWarning`, with the stable code
+`NODE_CRYPTO_DEPRECATED_<ALGORITHM>` (`md5` gives
+`NODE_CRYPTO_DEPRECATED_MD5`).
+
+### Peer loading
+
+`bcrypt` stays an optional peer: it loads only when a bcrypt
+operation first runs, in ESM and CJS builds and in async and `Sync`
+variants. Sync loading uses a per-format file (`require-sync-esm.ts`
+via `createRequire`, `require-sync-cjs.ts` via `require`) selected by
+the `#sync-require` specifier, mapped per build through `tsconfig`
+`paths` plus the `imports` maps in the root and per-tree
+`package.json` files. A missing peer throws
+`MISSING_PEER_DEPENDENCY` naming the package to install; every other
+namespace works without it.
