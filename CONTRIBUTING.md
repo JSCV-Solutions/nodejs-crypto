@@ -18,6 +18,14 @@ pnpm install
 `pnpm install` also activates the Husky Git hooks through the `prepare`
 script, so commits are linted locally with no extra setup.
 
+### Windows
+
+Run Git operations from Git Bash (included with Git for Windows).
+The Husky Git hooks depend on Unix coreutils (`dirname`, `basename`)
+that PowerShell and `cmd.exe` do not provide, so commits and pushes
+fail outside Git Bash. Do not change `core.hooksPath` to work around
+this: Husky 9 rewrites it to `.husky/_` on every `pnpm install`.
+
 ## Scripts
 
 | Command             | Purpose                                                                                                        |
