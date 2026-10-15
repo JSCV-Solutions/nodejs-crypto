@@ -188,6 +188,24 @@ pnpm exec commitlint --edit <message-file>
   comments, tests or fixtures. Public known-answer vectors from RFCs or
   NIST are allowed because they are published test data.
 
+## Security
+
+See [`SECURITY.md`](./SECURITY.md) for how to report vulnerabilities
+and which versions receive security fixes.
+
+Dependabot checks PNPM dependencies weekly
+(`.github/dependabot.yml`): minor and patch updates arrive grouped in
+one pull request, major updates arrive separately for individual
+review. Dependabot titles use the `CHORE - ` prefix so they fit the
+`<TYPE> - <Description>` commit format; amend the title when it does
+not. Review grouped updates for split pairs (for example the
+`typescript` / `typescript-7` alias pair) before merging.
+
+CI runs `pnpm audit:prod` on pull requests and pushes to `main` and
+fails on high or critical findings in production dependencies.
+Reproduce it locally with `pnpm audit:prod`; findings limited to
+development dependencies do not fail the gate.
+
 ## Releases
 
 Releases are manual and tag-driven. The maintainer:

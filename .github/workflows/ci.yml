@@ -1,6 +1,7 @@
 # Continuous integration for pull requests and pushes to the default branch.
 # Fails when formatting, lint, type check, tests, build, the built-package
-# smoke test, the pull request commit lint or `openspec validate` fails.
+# smoke test, the production dependency audit, the pull request commit lint
+# or `openspec validate` fails.
 # Read-only permissions. See openspec/changes/add-release-pipeline.
 name: CI
 
@@ -92,6 +93,21 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm smoke
+
+  audit:
+    name: Production audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 12.8.1
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24.7.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm audit:prod
 
   commitlint:
     name: Commit lint

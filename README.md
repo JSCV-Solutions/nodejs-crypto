@@ -32,6 +32,11 @@ including the repository layout and code conventions.
 Releases are tag-driven; see the [Releases](./CONTRIBUTING.md#releases)
 procedure and dist-tags.
 
+## Security
+
+See [SECURITY.md](./SECURITY.md) for how to report vulnerabilities
+and which versions receive security fixes.
+
 ## Shared core
 
 Internal behavior every namespace builds on (`src/shared/`,

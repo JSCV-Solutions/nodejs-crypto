@@ -1,0 +1,20 @@
+# Dependabot updates PNPM dependencies weekly. Minor and patch
+# updates are grouped; major updates stay separate for individual
+# review. The commit prefix keeps Dependabot titles compatible with
+# the `<TYPE> - <Description>` commit conventions (see
+# CONTRIBUTING.md). See openspec/changes/add-security-policy.
+version: 2
+updates:
+  - package-ecosystem: pnpm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      minor-patch:
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
+    commit-message:
+      prefix: 'CHORE - '
