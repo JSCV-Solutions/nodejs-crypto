@@ -83,3 +83,38 @@ the `#sync-require` specifier, mapped per build through `tsconfig`
 `package.json` files. A missing peer throws
 `MISSING_PEER_DEPENDENCY` naming the package to install; every other
 namespace works without it.
+
+## Random generation
+
+CSPRNG-backed randomness (`src/packages/random/`, mirrored by
+`tests/random/`) for keys, salts and nonces. Everything draws from
+`node:crypto`; `Math.random` is never used. This section moves into
+the Docusaurus site with the documentation-site change; until then
+it is the user-facing reference.
+
+### Bytes
+
+`bytes(length, encoding?)` returns a `Promise` and
+`bytesSync(length, encoding?)` returns directly. Without an
+`encoding` both return a `Buffer` of `length` bytes; with `hex`,
+`base64` or `base64url` both return text decoding to `length`
+bytes. `length` must be a non-negative safe integer and the
+encoding must be one of the three supported values, otherwise the
+async variant rejects and the sync variant throws with
+`INVALID_ARGUMENT`.
+
+### Integers
+
+`integer({ min?, max })` returns a `Promise<number>` and
+`integerSync({ min?, max })` returns a `number`, uniform in
+`[min, max)` (`min` inclusive, `max` exclusive, mirroring
+`node:crypto` `randomInt`; `min` defaults to `0`). Both bounds
+must be safe integers with `min` below `max`, otherwise the async
+variant rejects and the sync variant throws with
+`INVALID_ARGUMENT`.
+
+### UUIDs
+
+`uuid()` returns a lowercase RFC 9562 Section 4.1 version 4 UUID
+string. It is synchronous only: `node:crypto` `randomUUID`
+performs no I/O, so there is no async `uuid` and no `uuidSync`.
