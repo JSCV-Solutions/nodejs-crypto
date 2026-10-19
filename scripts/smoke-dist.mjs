@@ -19,6 +19,21 @@ const subpaths = [
   'comparison'
 ];
 
+// Namespaces with real implementations list the function exports the
+// built trees must expose. Namespaces still on placeholder scaffolding
+// keep the legacy `namespace` marker until their change lands.
+const expectedFunctionExports = {
+  random: ['bytes', 'bytesSync', 'integer', 'integerSync', 'uuid']
+};
+
+function resolvesToNamespace(loaded, subpath) {
+  const names = expectedFunctionExports[subpath];
+  if (names !== undefined) {
+    return names.every(name => typeof loaded[name] === 'function');
+  }
+  return loaded.namespace === subpath;
+}
+
 let failures = 0;
 
 for (const subpath of subpaths) {
@@ -26,7 +41,10 @@ for (const subpath of subpaths) {
   try {
     const esm = await import(specifier);
     const cjs = require(specifier);
-    if (esm.namespace === subpath && cjs.namespace === subpath) {
+    if (
+      resolvesToNamespace(esm, subpath) &&
+      resolvesToNamespace(cjs, subpath)
+    ) {
       console.log(`ok - ${specifier}`);
     } else {
       failures += 1;
