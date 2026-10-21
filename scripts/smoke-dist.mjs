@@ -23,7 +23,8 @@ const subpaths = [
 // built trees must expose. Namespaces still on placeholder scaffolding
 // keep the legacy `namespace` marker until their change lands.
 const expectedFunctionExports = {
-  random: ['bytes', 'bytesSync', 'integer', 'integerSync', 'uuid']
+  random: ['bytes', 'bytesSync', 'integer', 'integerSync', 'uuid'],
+  comparison: ['equals', 'equalsSync']
 };
 
 function resolvesToNamespace(loaded, subpath) {
