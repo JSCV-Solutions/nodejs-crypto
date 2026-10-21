@@ -26,6 +26,6 @@ Secrets, MACs, tags, and hashes must be compared in constant time, otherwise ear
 
 ## Impact
 
-- Affected code: `src/packages/comparison/` (replaces the repository-tooling placeholder), `src/packages/comparison/typings/` declarations consumed via `import type`, `tests/` mirrors for the new runtime modules.
+- Affected code: `src/packages/comparison/` (replaces the repository-tooling placeholder), `tests/` mirrors for the new runtime modules. The namespace declares no types of its own and consumes the shared `CryptoInput` operand type via `import type`.
 - Public API: new `comparison` subpath export only; no changes to existing exports.
 - Dependencies, build, release: none. No breaking changes. Out of scope: `digest`, `message-authentication` (consumes this namespace later but is not built here), `password-hashing`, `key-derivation`, `encryption`, `random`, and the docs site beyond JSDoc for the new functions.

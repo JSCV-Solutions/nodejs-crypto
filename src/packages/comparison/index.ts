@@ -5,4 +5,4 @@
  * without leaking prefix information through timing.
  */
 export { equals, equalsSync } from './equals.ts';
-export type { CryptoInput } from './typings/inputs.js';
+export type { CryptoInput } from '../../shared/typings/inputs.js';
