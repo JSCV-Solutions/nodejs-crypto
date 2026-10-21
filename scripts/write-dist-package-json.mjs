@@ -15,11 +15,12 @@
  * `./typings/*.js` imports, so without the copy consumer typechecks
  * would fail on a missing module.
  */
-import { cp, mkdir, writeFile } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
+import { cp, mkdir, readdir, writeFile } from 'node:fs/promises';
+import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const rootDirectory = join(dirname(fileURLToPath(import.meta.url)), '..');
+const sourceDirectory = join(rootDirectory, 'src');
 
 const targets = [
   {
@@ -34,6 +35,38 @@ const targets = [
   }
 ];
 
+/**
+ * Finds every hand-written `typings` folder under `src`.
+ *
+ * Each namespace owns a `typings` folder next to its runtime modules,
+ * and the shared area owns one too. `tsc` type-checks declaration
+ * inputs but never re-emits them, while the emitted per-module `.d.ts`
+ * files reference them through `./typings/*.js` imports. Collecting the
+ * folders by name keeps the copy complete for every namespace instead
+ * of hard-coding one path.
+ *
+ * @param {string} directory - Directory to search.
+ * @returns {Promise<string[]>} Paths of the `typings` folders found.
+ */
+async function findTypingsFolders(directory) {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const found = [];
+  for (const entry of entries) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+    const entryPath = join(directory, entry.name);
+    if (entry.name === 'typings') {
+      found.push(entryPath);
+      continue;
+    }
+    found.push(...(await findTypingsFolders(entryPath)));
+  }
+  return found;
+}
+
+const typingsFolders = await findTypingsFolders(sourceDirectory);
+
 for (const target of targets) {
   await mkdir(target.directory, { recursive: true });
   const content = `${JSON.stringify(
@@ -45,9 +78,11 @@ for (const target of targets) {
     2
   )}\n`;
   await writeFile(join(target.directory, 'package.json'), content, 'utf8');
-  await cp(
-    join(rootDirectory, 'src', 'shared', 'typings'),
-    join(target.directory, 'shared', 'typings'),
-    { recursive: true }
-  );
+  for (const folder of typingsFolders) {
+    await cp(
+      folder,
+      join(target.directory, relative(sourceDirectory, folder)),
+      { recursive: true }
+    );
+  }
 }
