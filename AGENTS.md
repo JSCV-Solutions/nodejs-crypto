@@ -51,6 +51,21 @@ Follow `CONTRIBUTING.md` for the code conventions.
 11. Default parameters may only be raised or kept equal in strength. Lowering one is a breaking change that needs a major release.
 12. Do not bump versions, create tags or publish. Releases are manual and done by the maintainer.
 
+## Agent autonomy and user consent
+
+AI agents must not take repository-mutating or publishing actions on their
+own initiative. Specifically, an agent must not:
+
+- Add or modify changes (source, tests, docs, config, or any other files)
+  without an explicit request from the user.
+- Create commits without an explicit request from the user.
+- Open pull requests without an explicit request from the user.
+
+Proposing, planning, reviewing, and discussing are always allowed and
+encouraged. Only the act of writing changes, committing them, or opening a
+pull request requires the user to ask for it explicitly. When in doubt,
+ask before acting.
+
 ## Security-sensitive behavior that must stay documented
 
 - Argon2id is the default key derivation for encryption. A comment in the source and a section in the docs must say why.
