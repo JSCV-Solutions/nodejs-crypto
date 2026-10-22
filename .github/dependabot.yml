@@ -5,7 +5,7 @@
 # CONTRIBUTING.md). See openspec/changes/add-security-policy.
 version: 2
 updates:
-  - package-ecosystem: pnpm
+  - package-ecosystem: npm
     directory: /
     schedule:
       interval: weekly
