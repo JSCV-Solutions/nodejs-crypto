@@ -30,17 +30,30 @@ this: Husky 9 rewrites it to `.husky/_` on every `pnpm install`.
 
 | Command                                                   | Purpose                                                                                                        |
 | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `npx @fission-ai/openspec@1.14.0 validate --all --strict` | Validate OpenSpec specs and changes (must pass before archiving)                                               |
 | `pnpm audit:prod`                                         | Fail on high or critical findings in production dependencies                                                   |
 | `pnpm build`                                              | Emit ESM to `dist/esm` and CJS to `dist/cjs`, then write per-format `package.json` files                       |
+| `pnpm fallow`                                             | Run Fallow changed-code quality gate (`fallow audit`)                                                          |
 | `pnpm format:check`                                       | Verify Prettier formatting (`pnpm format` fixes)                                                               |
 | `pnpm lint`                                               | Run ESLint with strict type-checked rules, plus Prettier formatting as a lint rule                             |
 | `pnpm smoke`                                              | Verify every exported subpath loads from built output via both `import` and `require` (run after `pnpm build`) |
 | `pnpm test`                                               | Run the Node.js built-in test runner on `tests/**/*.test.ts` directly against TypeScript sources               |
 | `pnpm typecheck`                                          | Type-check sources with TypeScript 7.0.2 (`tsc`)                                                               |
-| `npx @fission-ai/openspec@1.14.0 validate --all --strict` | Validate OpenSpec specs and changes (must pass before archiving)                                               |
 
 Run `pnpm typecheck` and `pnpm test` after every source change.
 Keep `pnpm lint` and `pnpm format:check` green before pushing.
+
+## Static analysis (Fallow)
+
+CI runs `fallow audit` on every pull request and push to `main` as the
+`Fallow` job. The gate executes `fallow audit` against the changed files
+using the committed `fallow.toml` configuration and fails the run on any
+error-severity finding in changed code. The job posts a summary comment on
+pull requests. Telemetry is disabled and the analysis requires no network
+access.
+
+Run it locally with `pnpm fallow`; it is also part of the pre-push hook
+alongside `pnpm lint` and `pnpm format:check`.
 
 ## Repository layout
 

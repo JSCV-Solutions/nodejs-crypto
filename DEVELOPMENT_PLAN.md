@@ -140,28 +140,29 @@ Defaults can be overridden by callers, are stored with hashes and ciphertexts, a
 
 Already scaffolded in `openspec/changes/` (validated with `openspec validate --all --strict`): items 1 to 4. Start with `/opsx:apply add-repository-tooling`.
 
-| #   | Change                          | Capability           | Depends on     | Brief                                                              |
-| --- | ------------------------------- | -------------------- | -------------- | ------------------------------------------------------------------ |
-| 1   | `add-repository-tooling`        | `repository-tooling` | none           | Toolchain, builds, exports, lint, format, tests                    |
-| 2   | `add-commit-conventions`        | `commit-conventions` | 1              | commitlint rules, Husky hook                                       |
-| 3   | `add-shared-core`               | `shared-core`        | 1              | Errors, encodings, deprecation, lazy peer loading                  |
-| 4   | `add-release-pipeline`          | `release-pipeline`   | 1, 2           | CI, tag release with provenance, docs deploy                       |
-| 5   | `add-security-policy`           | `security-policy`    | 4              | SECURITY.md, Dependabot, audit gate                                |
-| 6   | `add-random-generation`         | `random`             | 3              | Secure bytes, integers, UUIDs                                      |
-| 7   | `add-comparison`                | `comparison`         | 3              | Constant-time equality                                             |
-| 8   | `add-digest-contract`           | `digest`             | 3              | Namespace contract for digests                                     |
-| 9   | `add-sha-2`                     | `sha-2`              | 8              | SHA-256 and SHA-512, NIST vectors                                  |
-| 10  | `add-message-authentication`    | `hmac`               | 7, 8           | HMAC with SHA-256/512, RFC 4231 vectors                            |
-| 11  | `add-key-derivation-contract`   | `key-derivation`     | 3              | Namespace contract for raw key derivation                          |
-| 12  | `add-pbkdf2`                    | `pbkdf2`             | 11             | Key derivation, RFC 6070 and RFC 7914 vectors                      |
-| 13  | `add-scrypt`                    | `scrypt`             | 11             | Key derivation, RFC 7914 vectors                                   |
-| 14  | `add-argon2`                    | `argon2`             | 11             | `argon2id`, `argon2i`, `argon2d`, RFC 9106 vectors                 |
-| 15  | `add-password-hashing-contract` | `password-hashing`   | 3, 7           | `hash`/`verify`, prefix dispatch, explicit algorithm for MD5       |
-| 16  | `add-bcrypt`                    | `bcrypt`             | 15             | `$2b$` only, 72-byte truncation, lazy peer                         |
-| 17  | `add-md5`                       | `md5`                | 8, 15          | Deprecated digest and password-hashing form                        |
-| 18  | `add-encryption-contract`       | `encryption`         | 3, 11          | Typed result, AAD, header binding, decrypt output                  |
-| 19  | `add-aes-256-gcm`               | `aes-256-gcm`        | 18, 12, 13, 14 | Cipher and KDF integration                                         |
-| 20  | `add-documentation-site`        | `documentation-site` | 4, 19          | Docusaurus, TypeDoc through the TypeScript 6 package, GitHub Pages |
+| #   | Change                          | Capability           | Depends on     | Brief                                                                               |
+| --- | ------------------------------- | -------------------- | -------------- | ----------------------------------------------------------------------------------- |
+| 1   | `add-repository-tooling`        | `repository-tooling` | none           | Toolchain, builds, exports, lint, format, tests                                     |
+| 2   | `add-commit-conventions`        | `commit-conventions` | 1              | commitlint rules, Husky hook                                                        |
+| 3   | `add-shared-core`               | `shared-core`        | 1              | Errors, encodings, deprecation, lazy peer loading                                   |
+| 4   | `add-release-pipeline`          | `release-pipeline`   | 1, 2           | CI, tag release with provenance, docs deploy                                        |
+| 5   | `add-security-policy`           | `security-policy`    | 4              | SECURITY.md, Dependabot, audit gate                                                 |
+| 6   | `add-random-generation`         | `random`             | 3              | Secure bytes, integers, UUIDs                                                       |
+| 7   | `add-comparison`                | `comparison`         | 3              | Constant-time equality                                                              |
+| 8   | `add-digest-contract`           | `digest`             | 3              | Namespace contract for digests                                                      |
+| 9   | `add-sha-2`                     | `sha-2`              | 8              | SHA-256 and SHA-512, NIST vectors                                                   |
+| 10  | `add-message-authentication`    | `hmac`               | 7, 8           | HMAC with SHA-256/512, RFC 4231 vectors                                             |
+| 11  | `add-key-derivation-contract`   | `key-derivation`     | 3              | Namespace contract for raw key derivation                                           |
+| 12  | `add-pbkdf2`                    | `pbkdf2`             | 11             | Key derivation, RFC 6070 and RFC 7914 vectors                                       |
+| 13  | `add-scrypt`                    | `scrypt`             | 11             | Key derivation, RFC 7914 vectors                                                    |
+| 14  | `add-argon2`                    | `argon2`             | 11             | `argon2id`, `argon2i`, `argon2d`, RFC 9106 vectors                                  |
+| 15  | `add-password-hashing-contract` | `password-hashing`   | 3, 7           | `hash`/`verify`, prefix dispatch, explicit algorithm for MD5                        |
+| 16  | `add-bcrypt`                    | `bcrypt`             | 15             | `$2b$` only, 72-byte truncation, lazy peer                                          |
+| 17  | `add-md5`                       | `md5`                | 8, 15          | Deprecated digest and password-hashing form                                         |
+| 18  | `add-encryption-contract`       | `encryption`         | 3, 11          | Typed result, AAD, header binding, decrypt output                                   |
+| 19  | `add-aes-256-gcm`               | `aes-256-gcm`        | 18, 12, 13, 14 | Cipher and KDF integration                                                          |
+| 20  | `add-documentation-site`        | `documentation-site` | 4, 19          | Docusaurus, TypeDoc through the TypeScript 6 package, GitHub Pages                  |
+| 21  | `add-fallow-configuration`      | `repository-tooling` | 4              | Fallow static analysis quality gate (dead code, duplication, complexity, diff-risk) |
 
 The PBKDF2, scrypt and Argon2 changes also add their PHC password-hash form once the `password-hashing` contract (15) exists; schedule their password-hashing requirements after item 15.
 

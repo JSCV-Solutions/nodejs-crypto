@@ -1,0 +1,68 @@
+entry = ["tests/**/*.test.ts", "scripts/*.mjs"]
+
+ignorePatterns = ["docs/**"]
+
+ignoreDependencies = ["typescript", "typescript-7"]
+
+ignoreExports = [
+  { file = "src/shared/require-sync-cjs.ts", exports = ["loadSyncPeer"] },
+  { file = "src/shared/require-sync-esm.ts", exports = ["loadSyncPeer"] },
+]
+
+ignoreExportsUsedInFile = true
+
+[typeAware]
+enabled = true
+projects = ["tsconfig.json"]
+require = "best-effort"
+
+[rules]
+unused-files = "error"
+unused-exports = "error"
+unused-types = "warn"
+unused-dependencies = "error"
+unused-dev-dependencies = "warn"
+unused-optional-dependencies = "warn"
+unused-enum-members = "error"
+unused-class-members = "error"
+unresolved-imports = "error"
+unlisted-dependencies = "error"
+duplicate-exports = "error"
+circular-dependencies = "warn"
+re-export-cycle = "warn"
+stale-suppressions = "warn"
+weakened-tests = "warn"
+added-suppression = "warn"
+test-only-branch = "warn"
+complexity-cyclomatic = "error"
+complexity-cognitive = "warn"
+complexity-crap = "warn"
+private-type-leaks = "off"
+prop-drilling = "off"
+thin-wrapper = "off"
+duplicate-prop-shape = "off"
+coverage-gaps = "off"
+feature-flags = "off"
+security-client-server-leak = "off"
+security-sink = "off"
+added-dependency = "off"
+diverged-clone-sibling = "off"
+css-token-drift = "off"
+css-duplicate-block = "off"
+css-selector-complexity = "off"
+css-dead-surface = "off"
+css-broken-reference = "off"
+
+[duplicates]
+mode = "mild"
+minTokens = 50
+minLines = 5
+threshold = 0
+
+[health]
+maxCyclomatic = 20
+maxCognitive = 15
+maxCrap = 30
+
+[audit]
+gate = "all"
