@@ -149,12 +149,23 @@ jobs:
         env:
           FALLOW_TELEMETRY_DISABLED: '1'
           DO_NOT_TRACK: '1'
-        run: npx --yes fallow@3.37.0 audit --format github-summary > fallow-summary.md
+        run: |
+          set +e
+          npx --yes fallow@3.37.0 audit --format json -o fallow-results.json
+          echo $? > fallow-exit.txt
+      - name: Render Fallow summary
+        if: always()
+        env:
+          FALLOW_TELEMETRY_DISABLED: '1'
+          DO_NOT_TRACK: '1'
+        run: npx --yes fallow@3.37.0 report --from fallow-results.json --format github-summary > fallow-summary.md
       - name: Post PR comment
         if: always() && github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh pr comment ${{ github.event.pull_request.number }} --body-file fallow-summary.md
+      - name: Enforce Fallow result
+        run: exit $(cat fallow-exit.txt)
 
   openspec:
     name: OpenSpec validate
