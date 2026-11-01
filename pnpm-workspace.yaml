@@ -3,6 +3,14 @@ allowBuilds:
 engineStrict: true
 minimumReleaseAge: 10080 # 7 days
 minimumReleaseAgeExclude:
+  - '@fallow-cli/darwin-arm64@3.37.0'
+  - '@fallow-cli/darwin-x64@3.37.0'
+  - '@fallow-cli/linux-arm64-gnu@3.37.0'
+  - '@fallow-cli/linux-arm64-musl@3.37.0'
+  - '@fallow-cli/linux-x64-gnu@3.37.0'
+  - '@fallow-cli/linux-x64-musl@3.37.0'
+  - '@fallow-cli/win32-arm64-msvc@3.37.0'
+  - '@fallow-cli/win32-x64-msvc@3.37.0'
   - '@types/node@24.19.1'
   - '@typescript-eslint/eslint-plugin@8.71.0'
   - '@typescript-eslint/parser@8.71.0'
@@ -15,6 +23,8 @@ minimumReleaseAgeExclude:
   - '@typescript-eslint/utils@8.71.0'
   - '@typescript-eslint/visitor-keys@8.71.0'
   - eslint@10.12.0
+  - fallow@3.37.0
+  - fallow-type-aware@3.37.0
   - typescript-eslint@8.71.0
 packages:
   - docs

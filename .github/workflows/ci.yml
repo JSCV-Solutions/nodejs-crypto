@@ -127,6 +127,35 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
 
+  fallow:
+    name: Fallow
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 12.8.1
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24.7.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Run Fallow audit
+        env:
+          FALLOW_TELEMETRY_DISABLED: '1'
+          DO_NOT_TRACK: '1'
+        run: npx --yes fallow@3.37.0 audit --format github-summary > fallow-summary.md
+      - name: Post PR comment
+        if: always() && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr comment ${{ github.event.pull_request.number }} --body-file fallow-summary.md
+
   openspec:
     name: OpenSpec validate
     runs-on: ubuntu-latest
