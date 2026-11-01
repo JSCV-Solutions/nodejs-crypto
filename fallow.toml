@@ -2,7 +2,7 @@ entry = ["tests/**/*.test.ts", "scripts/*.mjs"]
 
 ignorePatterns = ["docs/**"]
 
-ignoreDependencies = ["typescript", "typescript-7"]
+ignoreDependencies = ["typescript-7"]
 
 ignoreExports = [
   { file = "src/shared/require-sync-cjs.ts", exports = ["loadSyncPeer"] },
