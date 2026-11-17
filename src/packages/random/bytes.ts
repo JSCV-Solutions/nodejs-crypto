@@ -6,7 +6,10 @@
  * `hex`, `base64` or `base64url` text on request.
  */
 import { randomBytes } from 'node:crypto';
-import { encodeBytes } from '../../shared/encodings.ts';
+import {
+  assertSupportedEncoding,
+  encodeBytes
+} from '../../shared/encodings.ts';
 import { InvalidArgumentError } from '../../shared/errors.ts';
 import type { Encoding } from '../../shared/typings/encodings.js';
 
@@ -35,7 +38,9 @@ export function bytes(
 ): Promise<Buffer | string> {
   try {
     assertLength(length);
-    assertEncoding(encoding);
+    if (encoding !== undefined) {
+      assertSupportedEncoding(encoding);
+    }
   } catch (error: unknown) {
     if (error instanceof Error) {
       return Promise.reject(error);
@@ -90,7 +95,9 @@ export function bytesSync(
   encoding?: Encoding
 ): Buffer | string {
   assertLength(length);
-  assertEncoding(encoding);
+  if (encoding !== undefined) {
+    assertSupportedEncoding(encoding);
+  }
   try {
     return render(randomBytes(length), encoding);
   } catch (error: unknown) {
@@ -107,29 +114,6 @@ export function bytesSync(
 function assertLength(length: number): void {
   if (!Number.isSafeInteger(length) || length < 0) {
     throw invalidLengthError();
-  }
-}
-
-/**
- * Output encodings the byte generator supports.
- */
-const supportedEncodings: ReadonlySet<Encoding> = new Set<Encoding>([
-  'hex',
-  'base64',
-  'base64url'
-]);
-
-/**
- * Rejects output encodings outside the shared closed set.
- *
- * @param encoding - Candidate output encoding, if one was given.
- * @throws {InvalidArgumentError} WHEN the encoding is not `hex`, `base64` or `base64url`.
- */
-function assertEncoding(encoding: Encoding | undefined): void {
-  if (encoding !== undefined && !supportedEncodings.has(encoding)) {
-    throw new InvalidArgumentError(
-      'Invalid encoding: expected hex, base64 or base64url.'
-    );
   }
 }
 

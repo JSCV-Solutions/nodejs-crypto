@@ -7,7 +7,7 @@
  * silently truncated the way `Buffer.from` would on its own. Error
  * messages never echo the offending input.
  */
-import { InvalidEncodingError } from './errors.ts';
+import { InvalidArgumentError, InvalidEncodingError } from './errors.ts';
 import type { Encoding } from './typings/encodings.js';
 
 const HEXPattern: RegExp = /^[0-9a-fA-F]*$/;
@@ -70,4 +70,28 @@ export function isWellFormed(text: string, encoding: Encoding): boolean {
     return text.length % 4 === 0 && base64UrlPaddedPattern.test(text);
   }
   return text.length % 4 !== 1 && base64UrlUnpaddedPattern.test(text);
+}
+
+/**
+ * Asserts that a value is one of the supported binary-to-text encodings.
+ *
+ * The single membership test for the {@link Encoding} union: every namespace
+ * that validates an encoding argument SHALL call this helper instead of
+ * re-declaring a closed set. Throws an `InvalidArgumentError` (code
+ * `INVALID_ARGUMENT`) for any value other than `'hex'`, `'base64'` or
+ * `'base64url'`, including non-string values and `undefined`.
+ *
+ * @param value - Candidate encoding value to validate.
+ * @throws {InvalidArgumentError} WHEN `value` is not `'hex'`, `'base64'` or `'base64url'` (code `INVALID_ARGUMENT`).
+ * @returns `void`, narrowing `value` to {@link Encoding} after the call.
+ */
+export function assertSupportedEncoding(
+  value: unknown
+): asserts value is Encoding {
+  if (value === 'hex' || value === 'base64' || value === 'base64url') {
+    return;
+  }
+  throw new InvalidArgumentError(
+    'Invalid encoding: expected hex, base64 or base64url.'
+  );
 }

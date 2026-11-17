@@ -1,11 +1,15 @@
 import { strict as assert } from 'node:assert';
 import { describe, it } from 'node:test';
 import {
+  assertSupportedEncoding,
   decodeText,
   encodeBytes,
   isWellFormed
 } from '../../src/shared/encodings.ts';
-import { InvalidEncodingError } from '../../src/shared/errors.ts';
+import {
+  InvalidArgumentError,
+  InvalidEncodingError
+} from '../../src/shared/errors.ts';
 
 const raw: Uint8Array = new Uint8Array([0, 1, 2, 250, 255]);
 
@@ -78,5 +82,71 @@ void describe('shared encodings', (): void => {
     assert.equal(isWellFormed('AAEC-v8', 'base64url'), true);
     assert.equal(isWellFormed('AAEC-v8=', 'base64url'), true);
     assert.equal(isWellFormed('A', 'base64url'), false);
+  });
+});
+
+void describe('assertSupportedEncoding', (): void => {
+  void it('does not throw for the three supported encodings', (): void => {
+    for (const encoding of ['hex', 'base64', 'base64url']) {
+      assert.doesNotThrow((): void => {
+        assertSupportedEncoding(encoding);
+      });
+    }
+  });
+
+  void it('narrows the value to Encoding after the call', (): void => {
+    const value: unknown = 'hex';
+    assertSupportedEncoding(value);
+    const narrowed: 'hex' | 'base64' | 'base64url' = value;
+    assert.equal(narrowed, 'hex');
+  });
+
+  void it('throws INVALID_ARGUMENT for unsupported strings', (): void => {
+    for (const value of ['utf8', '', 'base64x', 'HEX']) {
+      assert.throws(
+        (): void => {
+          assertSupportedEncoding(value);
+        },
+        (error: unknown): boolean => {
+          assert.equal(error instanceof InvalidArgumentError, true);
+          assert.equal(
+            (error as InvalidArgumentError).code,
+            'INVALID_ARGUMENT'
+          );
+          return true;
+        }
+      );
+    }
+  });
+
+  void it('throws INVALID_ARGUMENT for non-string values', (): void => {
+    const values: unknown[] = [1, true, {}, [], null, undefined, Symbol('x')];
+    for (const value of values) {
+      assert.throws(
+        (): void => {
+          assertSupportedEncoding(value);
+        },
+        (error: unknown): boolean => {
+          assert.equal(error instanceof InvalidArgumentError, true);
+          assert.equal(
+            (error as InvalidArgumentError).code,
+            'INVALID_ARGUMENT'
+          );
+          return true;
+        }
+      );
+    }
+  });
+
+  void it('does not throw for supported values (absence of throws)', (): void => {
+    assert.doesNotThrow((): void => {
+      assertSupportedEncoding('hex');
+    });
+    assert.doesNotThrow((): void => {
+      assertSupportedEncoding('base64');
+    });
+    assert.doesNotThrow((): void => {
+      assertSupportedEncoding('base64url');
+    });
   });
 });
