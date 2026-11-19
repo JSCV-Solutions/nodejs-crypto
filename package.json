@@ -154,11 +154,11 @@
     "eslint": "10.14.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.7",
-    "fallow": "3.39.0",
+    "fallow": "3.42.0",
     "husky": "9.1.7",
-    "prettier": "3.9.10",
+    "prettier": "3.10.1",
     "typescript": "npm:@typescript/typescript6@6.0.2",
     "typescript-7": "npm:typescript@7.0.2",
-    "typescript-eslint": "8.72.1"
+    "typescript-eslint": "8.72.2"
   }
 }
