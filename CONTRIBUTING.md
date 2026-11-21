@@ -41,7 +41,7 @@ this: Husky 9 rewrites it to `.husky/_` on every `pnpm install`.
 | `pnpm typecheck`                                          | Type-check sources with TypeScript 7.0.2 (`tsc`)                                                               |
 
 Run `pnpm typecheck` and `pnpm test` after every source change.
-Keep `pnpm lint` and `pnpm format:check` green before pushing.
+Keep `pnpm lint`, `pnpm format:check` and `pnpm fallow` green before pushing.
 
 ## Static analysis (Fallow)
 
@@ -231,7 +231,7 @@ Releases are manual and tag-driven. The maintainer:
 [`release.yml`](./.github/workflows/release.yml) runs only for `v*.*.*` tags, so branch pushes never
 publish. It fails when the tag without its leading `v` differs from
 `package.json`, repeats the full verification (`format:check`, `lint`,
-`typecheck`, `test`, `build`, `smoke`), publishes with
+`typecheck`, `test`, `build`, `smoke`, `fallow`), publishes with
 `pnpm publish --no-git-checks --provenance --access public` using the
 `NPM_TOKEN` secret (a granular token limited to this package), then
 creates a GitHub release with generated notes.

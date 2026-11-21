@@ -16,4 +16,4 @@
 ## 3. Namespace wiring and release readiness
 
 - [x] 3.1 Wire `src/packages/random/index.ts` to export only `bytes`, `bytesSync`, `integer`, `integerSync`, and `uuid` (removing the placeholder), keep `tests/` mirroring runtime modules with no tests for pure `.d.ts` files, and verify `pnpm test` passes for the whole suite.
-- [x] 3.2 Run the integration gate `pnpm typecheck`, `pnpm test`, `pnpm lint`, `pnpm format:check`, `pnpm build`, and `pnpm smoke`, plus `openspec validate --all --strict`, and verify every command is green before review.
+- [x] 3.2 Run the integration gate `pnpm typecheck`, `pnpm test`, `pnpm lint`, `pnpm format:check`, `pnpm build`, `pnpm smoke`, `pnpm fallow`, plus `openspec validate --all --strict`, and verify every command is green before review.
