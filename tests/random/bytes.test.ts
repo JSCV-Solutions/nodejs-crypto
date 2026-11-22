@@ -20,7 +20,11 @@ void describe('random bytes', (): void => {
       const second: Buffer = await bytes(length);
       assert.equal(Buffer.isBuffer(first), true);
       assert.equal(first.length, length);
-      if (length > 0) {
+      // Only assert distinctness for lengths where a collision is
+      // negligible (2^-128 for 16 bytes); a single random byte can
+      // legitimately repeat between two calls, so 1-byte (and 0-byte)
+      // outputs are only checked for shape.
+      if (length >= 16) {
         assert.equal(first.equals(second), false);
       }
     }
