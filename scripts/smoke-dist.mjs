@@ -32,13 +32,15 @@ const subpaths = [
 // keep the legacy `namespace` marker until their change lands.
 const expectedFunctionExports = {
   random: ['bytes', 'bytesSync', 'integer', 'integerSync', 'uuid'],
-  comparison: ['equals', 'equalsSync']
+  comparison: ['equals', 'equalsSync'],
+  digest: ['hash', 'hashSync']
 };
 
 // Namespaces that own type declarations list them here. Each one must
 // be exported by its own namespace and must resolve from the built tree.
 const expectedTypeExports = {
-  random: ['IntegerOptions']
+  random: ['IntegerOptions'],
+  digest: ['DigestAlgorithm']
 };
 
 /**
